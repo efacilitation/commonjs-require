@@ -1,6 +1,6 @@
 {
   "name": "commonjs-require-definition",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple common.js `require()` definition.",
   "main": "node.js",
   "scripts": {
