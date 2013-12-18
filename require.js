@@ -11,6 +11,33 @@
     return ({}).hasOwnProperty.call(object, name);
   };
 
+  var aliases = {};
+  
+  var alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var endsWith = function(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  };
+
+  var unalias = function(alias, loaderPath) {
+    var start = 0;
+    if (loaderPath) {
+      if (loaderPath.indexOf('components/' === 0)) {
+        start = 'components/'.length
+      }
+      if (endsWith(loaderPath, '/index')) {
+        loaderPath = loaderPath.substring(start, loaderPath.length - '/index'.length)
+      }
+    }
+    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
+    if (result) {
+      return 'components/' + result.substring(0, result.length - '/index.js'.length);  
+    }
+    return alias;
+  };
+  
   var expand = function(root, name) {
     var results = [], parts, part;
     if (/^\.\.?(\/|$)/.test(name)) {
@@ -51,6 +78,7 @@
   var require = function(name, loaderPath) {
     var path = expand(name, '.');
     if (loaderPath == null) loaderPath = '/';
+    path = unalias(name, loaderPath);
 
     if (has(cache, path)) return cache[path].exports;
     if (has(modules, path)) return initModule(path, modules[path]);
@@ -83,8 +111,9 @@
     }
     return result;
   };
-
+  
   globals.require = require;
+  globals.require.alias = alias;
   globals.require.define = define;
   globals.require.register = define;
   globals.require.list = list;
