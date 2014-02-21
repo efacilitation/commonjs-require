@@ -20,13 +20,13 @@
       if (loaderPath.indexOf('components/' === 0)) {
         start = 'components/'.length;
       }
-      if (endsWith(loaderPath, '/index')) {
-        loaderPath = loaderPath.substring(start, loaderPath.length - '/index'.length);
+      if (loaderPath.indexOf('/', start) > 0) {
+        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
       }
     }
     var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
     if (result) {
-      return 'components/' + result.substring(0, result.length - '/index.js'.length);
+      return 'components/' + result.substring(0, result.length - '.js'.length);
     }
     return alias;
   };
