@@ -61,7 +61,7 @@
   var initModule = function(name, definition) {
     var module = {id: name, exports: {}};
     cache[name] = module;
-    definition(module.exports, localRequire(name), module);
+    definition.call(module.exports, module.exports, localRequire(name), module);
     return module.exports;
   };
 
