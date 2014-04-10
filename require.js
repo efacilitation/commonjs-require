@@ -80,6 +80,14 @@
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
+  require.clearCache = function(name) {
+    if (name) {
+      delete cache[name];
+    } else {
+      cache = {};
+    }
+  };
+
   require.alias = function(from, to) {
     aliases[to] = from;
   };
