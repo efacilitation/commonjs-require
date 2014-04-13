@@ -1,24 +1,25 @@
 {
-  "name": "commonjs-require-definition",
-  "version": "0.1.2",
-  "description": "Simple common.js `require()` definition.",
+  "name": "commonjs-loader",
+  "version": "1.1.2",
+  "description": "Simple common.js module loading mechanism for the browser. Compatible with the Node.js `require()` API.",
   "main": "node.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brunch/commonjs-require-definition.git"
+    "url": "git@github.com:efacilitation/commonjs-loader.git"
   },
   "keywords": [
     "commonjs",
     "module",
     "require",
-    "define"
+    "define",
+    "loader"
   ],
   "author": "Paul Miller (http://paulmillr.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brunch/commonjs-require-definition/issues"
+    "url": "https://github.com/efacilitation/commonjs-loader/issues"
   }
 }
