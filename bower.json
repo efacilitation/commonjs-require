@@ -1,9 +1,9 @@
 {
-  "name": "commonjs-loader",
-  "description": "Simple common.js module loading mechanism for the browser. Compatible with the Node.js `require()` API.",
-  "version": "1.1.2",
-  "keywords": ["cjs", "commonjs", "module", "require", "define", "loader"],
-  "main": "commonjs-loader.js",
+  "name": "commonjs-require",
+  "description": "browser-side CommonJS require() function.",
+  "version": "1.1.3",
+  "keywords": ["cjs", "commonjs", "module", "require", "define"],
+  "main": "commonjs-require.js",
   "ignore": [
     "**/.*",
     "node_modules",
