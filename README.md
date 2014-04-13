@@ -1,6 +1,6 @@
 # CommonJS Require
 
-browser-side [http://wiki.commonjs.org/wiki/Modules/1.1.1#Require](CommonJS require() function).
+browser-side [CommonJS require() function](http://wiki.commonjs.org/wiki/Modules/1.1.1#Require).
 
 ## Usage
 
