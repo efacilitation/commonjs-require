@@ -4,7 +4,7 @@ browser-side [CommonJS require() function](http://wiki.commonjs.org/wiki/Modules
 
 ## Usage
 
-Add the `commonjs-require.js` as script src tag to your project. Alternatively you could prepend the `commonjs-require.js` content to a file. Now you can register modules with `require.register(name, function(exports, require, module){})`.
+Add the `commonjs-require.js` as script src to your site. Now you can register modules with `require.register(name, fn)`.
 
 
 ### Example
@@ -13,6 +13,7 @@ Add the `commonjs-require.js` as script src tag to your project. Alternatively y
 <script src="commonjs-require.js"></script>
 <script>
 require.register("module", function(exports, require, module){
+  /* Some Module content */
   module.exports = "content"
 })
 alert(require('module'))
