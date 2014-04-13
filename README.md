@@ -31,7 +31,7 @@ This will alert `content`
 
 ## Why not browserify?
 
-Browserify requires (scnr) that you use some magic AST/require.resolve mechanism to built your CommonJS package/files for the browser. Some people find this to complex, especially if you have to bundle different files for different sections of your website or use dynamic requires.
+Browserify requires (scnr) that you use some magic AST/require.resolve mechanism to built your CommonJS package/files for the browser. This is really complex - especially if you have to bundle different files for different sections of your website, use dynamic requires or have circular dependencies.
 
 
 ## API
