@@ -5,14 +5,9 @@
   if (typeof globals.require === 'function') return;
 
   var modules = {};
-  var cache = {};
   var has = ({}).hasOwnProperty;
 
   var aliases = {};
-
-  var endsWith = function(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-  };
 
   var unalias = function(alias, loaderPath) {
     var start = 0;
@@ -60,7 +55,7 @@
 
   var initModule = function(name, definition) {
     var module = {id: name, exports: {}};
-    cache[name] = module;
+    require._cache[name] = module;
     definition.call(module.exports, module.exports, localRequire(name), module);
     return module.exports;
   };
@@ -70,22 +65,14 @@
     if (loaderPath == null) loaderPath = '/';
     path = unalias(name, loaderPath);
 
-    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(require._cache, path)) return require._cache[path].exports;
     if (has.call(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has.call(require._cache, dirIndex)) return require._cache[dirIndex].exports;
     if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
     throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
-  };
-
-  require.clearCache = function(name) {
-    if (name) {
-      delete cache[name];
-    } else {
-      cache = {};
-    }
   };
 
   require.alias = function(from, to) {
@@ -104,6 +91,7 @@
     }
   };
 
+
   require.list = function() {
     var result = [];
     for (var item in modules) {
@@ -114,6 +102,11 @@
     return result;
   };
 
-  require.brunch = true;
+  require.clearCache = function() {
+      require._cache = {};
+  };
+
+  require._cache = {};
   globals.require = require;
+
 })();
