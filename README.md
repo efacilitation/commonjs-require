@@ -39,8 +39,14 @@ Browserify requires (scnr) that you use some magic AST/require.resolve mechanism
 * `require(name)` — loads registered module and returns its `exports`.
 * `require.register(name, fn)` — registers new module. `fn` should have signature `exports, require, module`.
 * `require.list()` — lists all registered modules.
-* `require.clearCache(name)` — allows to clear the require cache. You can pass the optional parameter `name` to clear the cache of a specific module.
+* `require.clearCache(name)` — allows to clear the require cache.
+* `require._cache` - the require cache exposed as pseudo private member.
 
+## Node support
+
+The node-module-emulator.js emulates the Node.js environment more closely by defining the Node core module "module".
+When included all require calls will be passed through the _load function. This improves support for modules which
+rely on the Node module loading mechanism (for example Mockery).
 
 ## License
 
