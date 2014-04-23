@@ -46,6 +46,12 @@ commonjs-require emulates the actual loading mechanism from Node.js in that it d
 Module._load() (Module is exposed via the "module" module). This improves support for modules which rely on the Node
 module system implementation (for example Mockery).
 
+### Module API
+
+* `Module._load(request, parent)` - does the actual module loading and instantiation
+* `Module._cache` - is the cache of loaded modules, can be cleared by assigning an empty object
+* `Module._resolveFilename` - determines the actual module id (e.g. adds "index" if its missing)
+
 ## License
 
 MIT

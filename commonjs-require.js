@@ -109,7 +109,6 @@
     return result;
   };
 
-  require.cache = Module._cache;
   globals.require = require;
 
   require.define('module', function(exports, require, module) {
