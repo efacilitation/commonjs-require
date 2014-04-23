@@ -1,13 +1,42 @@
 (function() {
+
   'use strict';
 
   var globals = typeof window === 'undefined' ? global : window;
   if (typeof globals.require === 'function') return;
 
-  var modules = {};
-  var has = ({}).hasOwnProperty;
+  var _definedModules = {};
+  var _aliases = {};
 
-  var aliases = {};
+  var Module = {
+    _load: function(request, parent) {
+      var name = Module._resolveFilename(request, parent);
+      var definition = _definedModules[name];
+      if (!definition) throw new Error('Cannot find module "' + name + '" from '+ '"' + parent + '"');
+
+      if (Module._cache[name]) return Module._cache[name].exports;
+
+      var localRequire = createLocalRequire(name);
+      var module = {id: name, exports: {}};
+      Module._cache[name] = module;
+      definition.call(module.exports, module.exports, localRequire, module);
+      return module.exports;
+    },
+    _cache: {},
+    // TODO: Implement this to behave more like the Node environment
+    _resolveFilename: function(request, parent) {
+      var path = unalias(request, parent);
+      if (_definedModules.hasOwnProperty(path)) return path;
+      path = expand(path, './index');
+      if (_definedModules.hasOwnProperty(path)) return path;
+      return request;
+    }
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    return Module._load(name, loaderPath);
+  };
 
   var unalias = function(alias, loaderPath) {
     var start = 0;
@@ -19,7 +48,7 @@
         loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
       }
     }
-    var result = aliases[alias + '/index.js'] || aliases[loaderPath + '/deps/' + alias + '/index.js'];
+    var result = _aliases[alias + '/index.js'] || _aliases[loaderPath + '/deps/' + alias + '/index.js'];
     if (result) {
       return 'components/' + result.substring(0, result.length - '.js'.length);
     }
@@ -42,71 +71,49 @@
       return results.join('/');
     };
   })();
-  var dirname = function(path) {
-    return path.split('/').slice(0, -1).join('/');
-  };
 
-  var localRequire = function(path) {
+  var createLocalRequire = function(path) {
     return function(name) {
       var absolute = expand(dirname(path), name);
       return globals.require(absolute, path);
     };
   };
 
-  var initModule = function(name, definition) {
-    var module = {id: name, exports: {}};
-    require._cache[name] = module;
-    definition.call(module.exports, module.exports, localRequire(name), module);
-    return module.exports;
-  };
-
-  var require = function(name, loaderPath) {
-    var path = expand(name, '.');
-    if (loaderPath == null) loaderPath = '/';
-    path = unalias(name, loaderPath);
-
-    if (has.call(require._cache, path)) return require._cache[path].exports;
-    if (has.call(modules, path)) return initModule(path, modules[path]);
-
-    var dirIndex = expand(path, './index');
-    if (has.call(require._cache, dirIndex)) return require._cache[dirIndex].exports;
-    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
-
-    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
   };
 
   require.alias = function(from, to) {
-    aliases[to] = from;
+    _aliases[to] = from;
   };
 
   require.register = require.define = function(bundle, fn) {
     if (typeof bundle === 'object') {
       for (var key in bundle) {
-        if (has.call(bundle, key)) {
-          modules[key] = bundle[key];
+        if (bundle.hasOwnProperty(key)) {
+          _definedModules[key] = bundle[key];
         }
       }
     } else {
-      modules[bundle] = fn;
+      _definedModules[bundle] = fn;
     }
   };
 
-
   require.list = function() {
     var result = [];
-    for (var item in modules) {
-      if (has.call(modules, item)) {
+    for (var item in _definedModules) {
+      if (_definedModules.hasOwnProperty(item)) {
         result.push(item);
       }
     }
     return result;
   };
 
-  require.clearCache = function() {
-      require._cache = {};
-  };
-
-  require._cache = {};
+  require.cache = Module._cache;
   globals.require = require;
+
+  require.define('module', function(exports, require, module) {
+    module.exports = Module;
+  });
 
 })();
