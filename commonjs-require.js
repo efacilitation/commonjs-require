@@ -25,7 +25,7 @@
     _cache: {},
     // TODO: Implement this to behave more like the Node environment
     _resolveFilename: function(request, parent) {
-      var path = unalias(request, parent);
+      var path = expand(dirname(parent), request);
       if (_definedModules.hasOwnProperty(path)) return path;
       path = expand(path, './index');
       if (_definedModules.hasOwnProperty(path)) return path;
@@ -34,26 +34,9 @@
   };
 
   var require = function(name, loaderPath) {
-    if (loaderPath == null) loaderPath = '/';
     return Module._load(name, loaderPath);
   };
 
-  var unalias = function(alias, loaderPath) {
-    var start = 0;
-    if (loaderPath) {
-      if (loaderPath.indexOf('components/' === 0)) {
-        start = 'components/'.length;
-      }
-      if (loaderPath.indexOf('/', start) > 0) {
-        loaderPath = loaderPath.substring(start, loaderPath.indexOf('/', start));
-      }
-    }
-    var result = _aliases[alias + '/index.js'] || _aliases[loaderPath + '/deps/' + alias + '/index.js'];
-    if (result) {
-      return 'components/' + result.substring(0, result.length - '.js'.length);
-    }
-    return alias;
-  };
 
   var expand = (function() {
     var reg = /^\.\.?(\/|$)/;
@@ -72,19 +55,15 @@
     };
   })();
 
-  var createLocalRequire = function(path) {
+  var createLocalRequire = function(parent) {
     return function(name) {
-      var absolute = expand(dirname(path), name);
-      return globals.require(absolute, path);
+      return globals.require(name, parent);
     };
   };
 
   var dirname = function(path) {
+    if (!path) return '';
     return path.split('/').slice(0, -1).join('/');
-  };
-
-  require.alias = function(from, to) {
-    _aliases[to] = from;
   };
 
   require.register = require.define = function(bundle, fn) {
