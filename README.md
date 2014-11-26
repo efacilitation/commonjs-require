@@ -56,5 +56,5 @@ module system implementation (for example Mockery).
 
 MIT
 
-* Copyright (c) 2014 [efa GmbH](http://efa-gmbh.com) ([Initial Reason of Fork](https://github.com/brunch/commonjs-require-definition/pull/8))
+* Copyright (c) 2014 [efa GmbH](http://efa-gmbh.com)
 * Copyright (c) 2013-2014 [Paul Miller](http://paulmillr.com/)
