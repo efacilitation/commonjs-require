@@ -26,7 +26,6 @@ This will alert `content`
 ## Automated wrapping into `require.register`
 
 * [gulp-wrap-commonjs](https://github.com/efacilitation/gulp-wrap-commonjs)
-* [grunt-wrap-commonjs](https://github.com/efacilitation/grunt-wrap-commonjs)
 
 
 ## Why not browserify?
